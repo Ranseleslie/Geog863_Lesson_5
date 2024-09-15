@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TxDOT 3D Map of Houston</title>
+  <!-- ArcGIS API for JavaScript CSS -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
+  <!-- ArcGIS API for JavaScript -->
+  <script src="https://js.arcgis.com/4.25/"></script>
+  <style>
+    html, body, #viewDiv {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="viewDiv"></div> 
+  <script>
+    require([
+      "esri/Map", 
+      "esri/views/SceneView", 
+      "esri/layers/VectorTileLayer" 
+    ], function(Map, SceneView, VectorTileLayer) {
+      
+      // Add TxDOT vector tile layer (replace with your found TxDOT URL)
+      const txDotLayer = new VectorTileLayer({
+        url: "https://tiles.arcgis.com/tiles/6EuFgO4fLTqfNOhu/arcgis/rest/services/TxDOT_Vector_Tile_Basemap/VectorTileServer"
+      });
+
+      // Create a new map and add the TxDOT vector tile layer
+      const map = new Map({
+        basemap: "streets",  // Optional basemap
+        layers: [txDotLayer] // Add the TxDOT vector tile layer to the map
+      });
+
+      // Create the 3D SceneView and set it to Houston
+      const view = new SceneView({
+        container: "viewDiv", // The HTML element ID where the 3D map will be displayed
+        map: map,            // The map object created earlier
+        camera: {
+          position: {
+            longitude: -95.3698, // Houston longitude
+            latitude: 29.7604,   // Houston latitude
+            z: 10000             // Elevation in meters for a 3D view
+          },
+          tilt: 75  // Camera tilt for a more dynamic view
+        }
+      });
+      
+      view.when(function() {
+        console.log("3D SceneView loaded successfully!");
+      });
+    });
+  </script>
+</body>
+</html>
+ 
