@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USA County Boundaries Map</title>
+  <!-- ArcGIS API for JavaScript CSS -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
+  <!-- ArcGIS API for JavaScript -->
+  <script src="https://js.arcgis.com/4.25/"></script>
+  <style>
+    html, body, #viewDiv {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="viewDiv"></div> 
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/layers/MapImageLayer"
+    ], function(Map, MapView, MapImageLayer) {
+      
+      // Create a new map
+      const map = new Map({
+        basemap: "streets" // You can choose another basemap like 'topo'
+      });
+
+      // Create a new view (2D map view)
+      const view = new MapView({
+        container: "viewDiv",  // Reference to the div in which the map is displayed
+        map: map,
+        center: [-100, 40],    // Longitude, latitude for USA
+        zoom: 4                // Zoom level to fit the country view
+      });
+
+      // Create a MapImageLayer for the USA service
+      const usaLayer = new MapImageLayer({
+        url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer", // URL for USA MapServer
+        sublayers: [
+          {
+            id: 3,                // County boundaries are sublayer 3
+            visible: true,        // Only this layer is visible
+            popupTemplate: {      // Popup template when you click on a county
+              title: "County: {NAME}",
+              content: "State: {STATE_NAME}, Population: {POP2000}"
+            }
+          }
+        ]
+      });
+
+      // Add the layer to the map
+      map.add(usaLayer);
+      
+    });
+  </script>
+</body>
+</html>
